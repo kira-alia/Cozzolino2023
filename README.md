@@ -2,6 +2,7 @@
 Scripts used for data processing and analysis in manuscript about the effect of Mediator kinase inhibition on interferon signaling in Down syndrome
 
 Data Processing
+- Indexes: Indexes were constructed using hisat2 version 2.1.0 using the hisat2-build command on hg38. 
 - Quality control: Data was received as fastq files. Quality of all files was checked using fastqc version 0.11.5
 - Trimming: Reads were trimmed using bbduk, specifically bbmap version 38.05. The command and parameters for bbduk were as follows:
 
@@ -11,9 +12,9 @@ sample=$(basename ${fastq} _R1.fastq.gz)
 bbduk.sh -Xmx40g \
     t=32 \
     in=${fastq} \
-    in2=/path/to/fascs{sample}_R2.fastq.gz \
-    out=/scratch/Users/kico4293/RNAseq_April2022/rep3/fastq/${sample}_R1.trim.fastq.gz \
-    out2=/scratch/Users/kico4293/RNAseq_April2022/rep3/fastq/${sample}_R2.trim.fastq.gz \
+    in2=/path/to/fastq/files/${sample}_R2.fastq.gz \
+    out=/path/to/output/files/${sample}_R1.trim.fastq.gz \
+    out2=/path/to/output/files/${sample}_R2.trim.fastq.gz \
     ref=${bbmap_adapters} \
     ktrim=r qtrim=rl trimq=10 k=23 mink=11 hdist=1 \
     maq=10 minlen=25 \
@@ -22,4 +23,5 @@ bbduk.sh -Xmx40g \
     stats=${sample}.trimstats.txt \
     refstats=${sample}.refstats.txt
 
-- 
+- Mapping: Reads were mapped using hisat2 version 2.1.0. The hisat2 command was run first with the flags -p 32, using hg38 as a reference genome. Samtools version 1.10 was then used to convert .sam files to .bam and .flagstat files. This was done by first running the samtools view command with the flags  -@ 32 -bS -o. The samtools sort command was next run on the files using the flags -@ 32. The samtools index command was used with the flags -@ 32, and then the flagstat command was used.
+- Counting: Featurecounts was used to count mapped reads for each sample. Necessary libraries: Rsubread. Featurecounts R script with parameters used in this study has been uploaded.
