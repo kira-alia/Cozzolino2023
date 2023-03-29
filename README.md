@@ -1,6 +1,7 @@
 # Cozzolino2023
-Scripts used for data processing and analysis in manuscript about the effect of Mediator kinase inhibition on interferon signaling in Down syndrome. With the exception of the splicing analysis, all analysis was performed by Kira Cozzolino with guidance from Lynn Sanford, Mary Allen, and Sam Hunter in the Dowell and Allen labs. Splicing analysis was performed by Benjamin Erickson in the Bentley lab.
+Scripts used for data processing and analysis in manuscript about the effect of Mediator kinase inhibition on interferon signaling in Down syndrome. With the exception of the splicing analysis, all RNA-seq based analysis was performed by Kira Cozzolino with guidance from Lynn Sanford, Taylor Jones, Mary Allen, and Sam Hunter in the Dowell and Allen labs. Splicing analysis was performed by Benjamin Erickson in the Bentley lab. Separately, ANOVA analysis of cytokine screen results was performed by Taylor Jones using the deposited scripts. 
 
+RNA-SEQ DATA
 Data Processing
 - Indexes: Indexes were constructed using hisat2 version 2.1.0 using the hisat2-build command on hg38. 
 - Quality control: Data was received as fastq files. Quality of all files was checked using fastqc version 0.11.5
