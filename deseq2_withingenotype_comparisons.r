@@ -41,8 +41,23 @@ rownames(countdat) <- countdat$GeneID
 countdat <- countdat[,-c(0,1,2,ncol(countdat))]
 head(countdat)
 
+# Batch correct - this won't be needed for all comparisons
+cov1 <- factor(metadata$group)
+cov1
+
+sva_corrected <- ComBat_seq(counts = as.matrix(countdat),
+                            batch=metadata$batch,
+                            group=cov1)
+sva_corrected
+
+metadata$batch
+write.csv(sva_corrected, file=paste(outdir,"filename_corrected.csv",sep=""))
+countdata_corrected <- as.data.frame(sva_corrected)
+countdata_corrected <- round(countdata_corrected,digits=0)
+write.csv(countdata_corrected, file=paste(outdir,"sva_corrected_rounded.csv",sep=""))
+
 #run Deseq on RNA-seq
-ddsboth <- DESeqDataSetFromMatrix(countData =  countdat, colData = metadata, design = ~group) #use this for all samples
+ddsboth <- DESeqDataSetFromMatrix(countData =  countdat, colData = metadata, design = ~group) #use this for all samples; if you're sva correcting use countdata_corrected instead
 ddsboth <- DESeq(ddsboth)
 DEddsboth <- ddsboth
 
@@ -94,7 +109,7 @@ write.table(resboth, file = outfilename, sep="\t",  quote = FALSE, row.names = T
 #Generate ranked dataframe with gene names in first column, second column is log-p, value multiplied by sign of fold change
 rnkdf <- tibble(gene = rownames(resdata),
                 rnk = -log10(resdata$padj) * sign(resdata$log2FoldChange)) %>%
-  arrange(desc(rnk)) %>% drop_na()
+  arrange(desc(rnk)) %>% na.omit()
 
 #Write out table without additional info for GSEA
 outfilename=paste(outdir, "samplename.rnk", sep="")
